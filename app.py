@@ -2,6 +2,9 @@ import os
 from dotenv import load_dotenv
 from langchain.llms import OpenAI
 from langchain.chat_models import ChatOpenAI
+from langchain.agents import load_tools
+from langchain.agents import initialize_agent
+from langchain.agents import AgentType
 
 load_dotenv()
 
@@ -36,3 +39,12 @@ print(prediction)
 # ChatGPT 3.5 Model
 get_user_input_for_gpt3 = input("[GPT3.5 Turbo] Enter a prompt: ")
 print(chat_llm.predict(get_user_input_for_gpt3))
+
+
+# The AI Agent!
+tools = load_tools(["serpapi", "llm-math"], llm=llm)
+
+agent_executor = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True)
+
+get_user_input_for_agent_executor = input("[Agent Executor] Enter a prompt: ")
+agent_executor.invoke({f"input: {get_user_input_for_agent_executor}"})
